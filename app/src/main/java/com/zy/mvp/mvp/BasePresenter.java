@@ -26,7 +26,7 @@ public class BasePresenter<V extends IView> implements IPresenter {
 
     @Override
     public boolean isViewAttach() {
-        return mViewRef != null && getView() != null;
+        return mViewRef != null && mViewRef.get() != null;
     }
 
     @Override
