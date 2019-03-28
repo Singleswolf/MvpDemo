@@ -6,6 +6,7 @@ import android.widget.EditText;
 import com.zy.mvp.R;
 import com.zy.mvp.base.BaseActivity;
 import com.zy.mvp.contract.LoginContract;
+import com.zy.mvp.model.entity.User;
 import com.zy.mvp.presenter.LoginPresenter;
 
 /**
@@ -40,7 +41,7 @@ public class LoginUI extends BaseActivity<LoginPresenter> implements LoginContra
     }
 
     @Override
-    public void loginSuccess() {
+    public void loginSuccess(User user) {
         hideLoading();
         showToast("登录成功");
     }

@@ -25,7 +25,7 @@ public class LoginPresenter extends BasePresenter<LoginContract.LoginView> imple
 
     @Override
     public void onSuccess(Object tag, User user) {
-        getView().loginSuccess();
+        getView().loginSuccess(user);
     }
 
     @Override

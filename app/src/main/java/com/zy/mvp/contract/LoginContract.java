@@ -11,7 +11,7 @@ import com.zy.mvp.model.entity.User;
 public interface LoginContract {
 
     interface LoginView extends IView {
-        void loginSuccess();
+        void loginSuccess(User user);
         void loginFailed(String error);
     }
 
