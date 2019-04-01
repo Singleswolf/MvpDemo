@@ -12,6 +12,7 @@ import com.zy.mvp.http.utils.DelayRetryWhenError;
 import com.zy.mvp.http.utils.RxSchedulers;
 import com.zy.mvp.model.api.LoginService;
 import com.zy.mvp.model.entity.User;
+import com.zy.mvp.utils.Logger;
 
 import io.reactivex.Observable;
 
@@ -29,11 +30,13 @@ public class LoginModel implements LoginContract.LoginModel {
                 .subscribe(new RxCallback<User>() {
                     @Override
                     protected void onFailed(int code, String msg) {
+                        Logger.e("LoginModel", "code %d, msg %s", code, msg);
                         callback.onFailed(null, msg);
                     }
 
                     @Override
                     protected void onSuccess(User data) {
+                        Logger.i("LoginModel", "name = %s", data.getName());
                         callback.onSuccess(null, data);
                     }
                 });

@@ -1,6 +1,6 @@
 package com.zy.mvp.http;
 
-import android.util.Log;
+import com.zy.mvp.utils.Logger;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -54,7 +54,7 @@ public abstract class RxCallback<T> extends DisposableObserver<BaseResponse<T>> 
         } catch (Exception e2) {
             e2.printStackTrace();
         } finally {
-            Log.e("OnSuccessAndFaultSub", "error:" + e.getMessage());
+            Logger.e("OnSuccessAndFaultSub", "error:", e);
             onFailed(-1, "finally error:" + e.getMessage());
         }
     }

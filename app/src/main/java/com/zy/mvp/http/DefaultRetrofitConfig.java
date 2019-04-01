@@ -1,6 +1,11 @@
 package com.zy.mvp.http;
 
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
+import com.zy.mvp.App;
 import com.zy.mvp.http.interceptor.ConfigParamsInterceptor;
 import com.zy.mvp.http.interceptor.HttpLoggingInterceptor;
 import com.zy.mvp.http.interceptor.TimeoutInterceptor;
@@ -24,6 +29,7 @@ public class DefaultRetrofitConfig implements RetrofitConfig {
     private boolean isUpload = false;
     private boolean logging = true;
     private boolean isHttps = true;
+    private boolean isCookie = true;
 
     public DefaultRetrofitConfig(Scheduler scheduler) {
         mScheduler = scheduler;
@@ -80,6 +86,11 @@ public class DefaultRetrofitConfig implements RetrofitConfig {
             HttpsUtils.SSLParams sslParams = HttpsUtils.getSslSocketFactory();//https
             builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager);
             builder.hostnameVerifier(HttpsUtils.UnSafeHostnameVerifier);
+        }
+        if (isCookie) {
+            ClearableCookieJar cookieJar =
+                    new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(App.getApp()));
+            builder.cookieJar(cookieJar);
         }
         builder.addInterceptor(new TimeoutInterceptor());
         builder.addInterceptor(new ConfigParamsInterceptor(buildParams()));

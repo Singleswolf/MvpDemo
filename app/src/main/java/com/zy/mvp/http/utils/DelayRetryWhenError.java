@@ -1,6 +1,6 @@
 package com.zy.mvp.http.utils;
 
-import android.util.Log;
+import com.zy.mvp.utils.Logger;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
@@ -59,7 +59,7 @@ public class DelayRetryWhenError implements Function<Observable<? extends Throwa
                         )) {
                             //如果超出重试次数也抛出错误，否则默认是会进入onCompleted
                             if (wrapper.curRetryCount <= mMaxRetryCount) {
-                                Log.i("lch1", "网络错误，重试次数:" + wrapper.curRetryCount);
+                                Logger.e("DelayRetryWhenError", "网络错误，重试次数:" + wrapper.curRetryCount);
                                 long delayTime = mDelay + (wrapper.curRetryCount - 1) * mIncreaseDelay;    //使用二进制指数退避算法，每次都比上次长时间
                                 return Observable.timer(delayTime, TimeUnit.MILLISECONDS, Schedulers.trampoline());
                             }

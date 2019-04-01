@@ -1,6 +1,6 @@
 package com.zy.mvp.http.utils;
 
-import android.util.Log;
+import com.zy.mvp.utils.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -113,7 +113,7 @@ public class HttpsUtils {
             kmf.init(clientKeyStore, password.toCharArray());
             return kmf.getKeyManagers();
         } catch (Exception e) {
-            Log.d(TAG, "prepareKeyManager: " + e.getMessage());
+            Logger.d(TAG, "prepareKeyManager: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
@@ -136,7 +136,7 @@ public class HttpsUtils {
                 try {
                     if (certStream != null) certStream.close();
                 } catch (IOException e) {
-                    Log.d(TAG, "prepareTrustManager: " + e.getMessage());
+                    Logger.d(TAG, "prepareTrustManager: " + e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -147,7 +147,7 @@ public class HttpsUtils {
             //通过tmf获取TrustManager数组，TrustManager也会信任keyStore中的证书
             return tmf.getTrustManagers();
         } catch (Exception e) {
-            Log.d(TAG, "prepareTrustManager: " + e.getMessage());
+            Logger.d(TAG, "prepareTrustManager: " + e.getMessage());
             e.printStackTrace();
         }
         return null;
