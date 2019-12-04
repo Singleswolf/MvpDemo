@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -15,6 +15,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    greendao {
+        schemaVersion 1   //数据库版本号，升级数据库需要修改版本号
     }
 }
 
@@ -37,4 +40,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:+'
     implementation 'com.google.code.gson:gson:+'
     implementation 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+
+    implementation deps.greenrobot.greendao
 }

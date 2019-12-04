@@ -1,10 +1,16 @@
 package com.zy.mvp.model.entity;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.Generated;
+
 /**
  * @Description: Created by yong on 2019/3/22 11:42.
  */
+@Entity
 public class User {
-
+    @Id(autoincrement = true)
+    private long id;
     private String key;
     private String phone;
     private String name;
@@ -15,8 +21,36 @@ public class User {
     private String other2;
     private String createTime;
 
+    @Generated(hash = 1223013944)
+    public User(long id, String key, String phone, String name, String passwd,
+                String text, String img, String other, String other2,
+                String createTime) {
+        this.id = id;
+        this.key = key;
+        this.phone = phone;
+        this.name = name;
+        this.passwd = passwd;
+        this.text = text;
+        this.img = img;
+        this.other = other;
+        this.other2 = other2;
+        this.createTime = createTime;
+    }
+
+    @Generated(hash = 586692638)
+    public User() {
+    }
+
+    public long getId() {
+        return this.id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getKey() {
-        return key;
+        return this.key;
     }
 
     public void setKey(String key) {
@@ -24,7 +58,7 @@ public class User {
     }
 
     public String getPhone() {
-        return phone;
+        return this.phone;
     }
 
     public void setPhone(String phone) {
@@ -32,7 +66,7 @@ public class User {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -40,7 +74,7 @@ public class User {
     }
 
     public String getPasswd() {
-        return passwd;
+        return this.passwd;
     }
 
     public void setPasswd(String passwd) {
@@ -48,7 +82,7 @@ public class User {
     }
 
     public String getText() {
-        return text;
+        return this.text;
     }
 
     public void setText(String text) {
@@ -56,7 +90,7 @@ public class User {
     }
 
     public String getImg() {
-        return img;
+        return this.img;
     }
 
     public void setImg(String img) {
@@ -64,7 +98,7 @@ public class User {
     }
 
     public String getOther() {
-        return other;
+        return this.other;
     }
 
     public void setOther(String other) {
@@ -72,7 +106,7 @@ public class User {
     }
 
     public String getOther2() {
-        return other2;
+        return this.other2;
     }
 
     public void setOther2(String other2) {
@@ -80,7 +114,7 @@ public class User {
     }
 
     public String getCreateTime() {
-        return createTime;
+        return this.createTime;
     }
 
     public void setCreateTime(String createTime) {
