@@ -4,8 +4,6 @@ import android.database.Cursor;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.zy.mvp.model.entity.DaoMaster;
-
 import org.greenrobot.greendao.AbstractDao;
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.internal.DaoConfig;
@@ -65,8 +63,8 @@ public class MigrationHelper {
     public final void migrate(Database db, Class<? extends AbstractDao<?, ?>>... daoClasses) {
         //生成临时表，复制表数据
         generateTempTables(db, daoClasses);
-        DaoMaster.dropAllTables(db, true);
-        DaoMaster.createAllTables(db, false);
+//        DaoMaster.dropAllTables(db, true);
+//        DaoMaster.createAllTables(db, false);
         //恢复数据
         restoreData(db, daoClasses);
     }
@@ -85,41 +83,48 @@ public class MigrationHelper {
             String tableName = daoConfig.tablename;
             String tempTableName = daoConfig.tablename.concat("_TEMP");
 
-            ArrayList<String> properties = new ArrayList<>();
-            StringBuilder createTableStringBuilder = new StringBuilder();
-
-            createTableStringBuilder.append("CREATE TABLE ").append(tempTableName).append(" (");
-            for (int j = 0; j < daoConfig.properties.length; j++) {
-                String columnName = daoConfig.properties[j].columnName;
-                if (getColumns(db, tableName).contains(columnName)) {
-                    properties.add(columnName);
-                    String type = null;
-                    try {
-                        type = getTypeByClass(daoConfig.properties[j].type);
-                    } catch (Exception exception) {
-                        exception.printStackTrace();
-                    }
-                    createTableStringBuilder.append(divider).append(columnName).append(" ").append(type);
-                    if (daoConfig.properties[j].primaryKey) {
-                        createTableStringBuilder.append(" PRIMARY KEY");
-                    }
-                    divider = ",";
-                }
-            }
-
-            createTableStringBuilder.append(");");
-            db.execSQL(createTableStringBuilder.toString());
-            Log.e("DBMigrationHelper", "generateTempTables: sql:" + createTableStringBuilder.toString());
-
-            StringBuilder insertTableStringBuilder = new StringBuilder();
-            insertTableStringBuilder.append("INSERT INTO ").append(tempTableName).append(" (");
-            insertTableStringBuilder.append(TextUtils.join(",", properties));
-            insertTableStringBuilder.append(") SELECT ");
-            insertTableStringBuilder.append(TextUtils.join(",", properties));
-            insertTableStringBuilder.append(" FROM ").append(tableName).append(";");
-
-            db.execSQL(insertTableStringBuilder.toString());
-            Log.e("DBMigrationHelper", "generateTempTables: sql:" + insertTableStringBuilder.toString());
+            db.beginTransaction();
+            db.execSQL("PRAGMA foreign_keys=off;");
+            db.execSQL("ALTER TABLE " + tableName + " RENAME TO " + tempTableName + ";");
+            db.execSQL("PRAGMA foreign_keys=on;");
+            db.setTransactionSuccessful();
+            db.endTransaction();
+//            ArrayList<String> properties = new ArrayList<>();
+//            StringBuilder createTableStringBuilder = new StringBuilder();
+//
+//            createTableStringBuilder.append("CREATE TABLE ").append(tempTableName).append(" (");
+//            for (int j = 0; j < daoConfig.properties.length; j++) {
+//                String columnName = daoConfig.properties[j].columnName;
+//                if (getColumns(db, tableName).contains(columnName)) {
+//                    properties.add("\"" + columnName + "\"");
+//                    String type = null;
+//                    try {
+//                        type = getTypeByClass(daoConfig.properties[j].type);
+//                    } catch (Exception exception) {
+//                        exception.printStackTrace();
+//                    }
+//                    createTableStringBuilder.append(divider).append("\"" + columnName + "\"").append(" ").append(type);
+//                    if (daoConfig.properties[j].primaryKey) {
+//                        createTableStringBuilder.append(" PRIMARY KEY");
+//                    }
+//                    divider = ",";
+//                }
+//            }
+//
+//            createTableStringBuilder.append(");");
+//
+//            Log.e("DBMigrationHelper", "generateTempTables: sql:" + createTableStringBuilder.toString());
+//            db.execSQL(createTableStringBuilder.toString());
+//
+//            StringBuilder insertTableStringBuilder = new StringBuilder();
+//            insertTableStringBuilder.append("INSERT INTO ").append(tempTableName).append(" (");
+//            insertTableStringBuilder.append(TextUtils.join(",", properties));
+//            insertTableStringBuilder.append(") SELECT ");
+//            insertTableStringBuilder.append(TextUtils.join(",", properties));
+//            insertTableStringBuilder.append(" FROM ").append(tableName).append(";");
+//
+//            db.execSQL(insertTableStringBuilder.toString());
+//            Log.e("DBMigrationHelper", "generateTempTables: sql:" + insertTableStringBuilder.toString());
         }
     }
 
@@ -140,13 +145,13 @@ public class MigrationHelper {
             for (int j = 0; j < daoConfig.properties.length; j++) {
                 String columnName = daoConfig.properties[j].columnName;
                 if (getColumns(db, tempTableName).contains(columnName)) {
-                    properties.add(columnName);
-                    propertiesQuery.add(columnName);
+                    properties.add("\"" + columnName + "\"");
+                    propertiesQuery.add("\"" + columnName + "\"");
                 } else {
                     try {
                         if (getTypeByClass(daoConfig.properties[j].type).equals("INTEGER")) {
-                            propertiesQuery.add("0 as " + columnName);
-                            properties.add(columnName);
+                            propertiesQuery.add("0 as \"" + columnName + "\"");
+                            properties.add("\"" + columnName + "\"");
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
